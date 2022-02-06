@@ -28,7 +28,7 @@ class Jobs(scrapy.Spider):
             item['company_name'] = company_name.extract()[0]
             item['name'] = name.extract()[0]
             item['loc'] = loc.extract()
-            item['card_url'] = card_url.extract()[0]
+            item['card_url'] = 'https://hk.jobsdb.com'+card_url.extract()[0]
             item['job_point_1'] = job_point_1.extract()[0]
             item['job_point_2'] = job_point_2.extract()[0]
             item['job_point_3'] = job_point_3.extract()[0]
