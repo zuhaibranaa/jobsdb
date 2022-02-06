@@ -4,14 +4,14 @@ from ..items import JobsdbItem
 
 class Jobs(scrapy.Spider):
     name = 'jobs'
+    start_page = input('Enter Your Start Range :  ')
+    end_page = input('Enter Your End Range :  ')
     start_urls = [
-        'https://hk.jobsdb.com/hk/jobs/information-technology/1',
+        'https://hk.jobsdb.com/hk/jobs/information-technology/'+start_page,
     ]
     def parse(self, response):
-        cards = response.css('.lmSnC_0') # returning Company Names
-        # yield {'card':cards}
+        cards = response.css('.lmSnC_0') # Returning Individual Cards
         for card in cards:
-            # yield {'card': card.extract()}
             item = JobsdbItem()
             date = card.css('time::attr(datetime)')
             company_name = card.css('div.sx2jih0.zcydq8bm>span.sx2jih0.zcydq84u._18qlyvc0._18qlyvc1x._18qlyvc1._18qlyvca::text')
@@ -21,15 +21,24 @@ class Jobs(scrapy.Spider):
             job_point_1 = card.css('.zcydq86i:nth-child(1) .zcydq89i ._18qlyvc8::text')
             job_point_2 = card.css('.zcydq86i:nth-child(2) .zcydq89i ._18qlyvc8::text')
             job_point_3 = card.css('.zcydq86i~ .zcydq86i+ .zcydq86i ._18qlyvc8::text')
-            id = card_url.extract()[0][-15:]
+            _id = card_url.extract()[0][-15:]
             
-            item['id'] = id
+            item['id'] = _id
             item['date'] = date.extract()[0]
-            item['company_name'] = company_name.extract()[0]
+            item['company_name'] = company_name.extract()
             item['name'] = name.extract()[0]
             item['loc'] = loc.extract()
             item['card_url'] = 'https://hk.jobsdb.com'+card_url.extract()[0]
-            item['job_point_1'] = job_point_1.extract()[0]
-            item['job_point_2'] = job_point_2.extract()[0]
-            item['job_point_3'] = job_point_3.extract()[0]
+            item['job_point_1'] = job_point_1.extract()
+            item['job_point_2'] = job_point_2.extract()
+            item['job_point_3'] = job_point_3.extract()
             yield item
+        next_page = response.css('div.sx2jih0.zcydq856.zcydq8em>a.sx2jih0.zcydq896.zcydq886.zcydq8o.zcydq856.zcydq8ea.zcydq8h.zcydq8y.zcydq8x.IQYn5_0._18qlyvc14._18qlyvc17.zcydq832.zcydq835::attr(href)').getall()[-1]
+        if next_page is not None:
+            if next_page[-1] <= self.end_page:
+                
+                next_page = 'https://hk.jobsdb.com'+next_page
+                yield scrapy.Request(
+                    response.urljoin(next_page),
+                    callback=self.parse
+                )
