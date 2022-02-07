@@ -8,7 +8,7 @@ import scrapy
 
 class JobsdbItem(scrapy.Item):
     # define the fields for your item here like:
-    id = scrapy.Field()
+    _id = scrapy.Field()
     date = scrapy.Field()
     company_name = scrapy.Field()
     name = scrapy.Field()

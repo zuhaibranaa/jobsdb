@@ -6,7 +6,7 @@ class Jobs(scrapy.Spider):
     name = 'jobs'
     end_page = None
     start_page = input('Enter Your Start Range :  ')
-    dump = input('Do You Want To Using End Limit Y/N :  ')
+    dump = input('Do You Want To Using End Limit [Y/N] :  ')
     if dump[0].upper() == 'Y':
         end_page = input('Enter Your End Range :  ')
     start_urls = [
@@ -27,7 +27,7 @@ class Jobs(scrapy.Spider):
             job_point_3 = card.css('.zcydq86i~ .zcydq86i+ .zcydq86i ._18qlyvc8::text')
             _id = card_url.extract()[0][-15:]
             # Passing Data To Item
-            item['id'] = _id
+            item['_id'] = _id
             item['date'] = date.extract()[0]
             item['company_name'] = company_name.extract()
             item['name'] = name.extract()[0]
