@@ -17,5 +17,8 @@ class JobsdbPipeline:
         self.collection = self.db['jobs_list']
     
     def process_item(self, item, spider):
-        self.collection.insert_one(dict(item))
+        try:
+            self.collection.insert_one(dict(item))
+        except:
+            return {'message': 'Item Already Exists'}
         return item
