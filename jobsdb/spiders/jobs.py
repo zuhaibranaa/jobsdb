@@ -8,7 +8,7 @@ class Jobs(scrapy.Spider):
     start_page = input('Enter Your Start Range :  ')
     dump = input('Do You Want To Using End Limit [Y/N] :  ')
     if dump[0].upper() == 'Y':
-        end_page = input('Enter Your End Range :  ')
+        end_page = int(input('Enter Your End Range :  '))
     start_urls = [
         'https://hk.jobsdb.com/hk/jobs/information-technology/'+start_page,
     ]
@@ -47,7 +47,8 @@ class Jobs(scrapy.Spider):
                     callback=self.parse
                 )
             else:
-                if next_page[-1] <= self.end_page: # Check Page Limit Described
+                st = int(next_page.split('/')[-1])
+                if st <= self.end_page: # Check Page Limit Described
                     next_page = 'https://hk.jobsdb.com'+next_page
                     yield scrapy.Request(
                         response.urljoin(next_page),
