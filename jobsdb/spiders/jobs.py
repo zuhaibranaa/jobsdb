@@ -28,7 +28,8 @@ class Jobs(scrapy.Spider):
             _id = card_url.extract()[0][-15:]
             # Passing Data To Item
             item['_id'] = _id
-            item['date'] = date.extract()[0]
+            date = str(date.extract()[0]).split('T')[0]
+            item['date'] = date
             item['company_name'] = company_name.extract()
             item['name'] = name.extract()[0]
             item['loc'] = loc.extract()
